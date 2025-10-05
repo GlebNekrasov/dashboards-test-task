@@ -12,5 +12,12 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
-  base: '/dashboards-test-task/',
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://109.73.206.144:6969',
+        changeOrigin: true,
+      },
+    },
+  },
 })
