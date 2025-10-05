@@ -1,0 +1,7 @@
+---
+description: AntDesign Vue usage
+globs: 'src/**/*.{vue,js,ts}'
+alwaysApply: true
+---
+
+Always use AntDesign Vue components for UI. Don't generate custom component if there is appropriate AntDesign Vue component. Use tag pattern like <Spin> in template, not <a-spin>. When use AntDesign Vue component in SFC, use import statement in script setup for import that AntDesign Vue component. Avoid using inline styles inside components, use classes and CSS styles connected to classes.

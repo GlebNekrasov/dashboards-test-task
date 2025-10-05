@@ -1,0 +1,285 @@
+---
+description: Project folder structure patterns for consistent file organization
+globs: **/*
+alwaysApply: true
+---
+
+# Project Structure Patterns
+
+## Current Project Structure Rules
+
+### Layer Organization
+
+```markdown
+<code_block_to_apply_changes_from> src/ ├── app/ # Application configuration ├── pages/ # Application pages ├── widgets/ # Complex UI blocks ├── features/ # Business features ├── shared/ # Shared utilities ├── enums/ # Enumeration types └── types/ # Global type definitions
+```
+
+### Layer-Specific Patterns
+
+#### app/ - Application Layer
+
+**Purpose**: Global app configuration, providers, routing, themes **Structure**:
+
+```
+app/
+├── assets/                 # Static assets (icons, images, patterns)
+├── core/                   # Core functionality (socket, etc.)
+├── directives/             # Global Vue directives
+├── locales/                # Internationalization
+├── mock/                   # Mock data and server
+├── routing/                # Router configuration
+├── store/                  # Global store modules
+├── styles/                 # Global styles and themes
+└── themes/                 # Theme configuration
+```
+
+#### pages/ - Pages Layer
+
+**Purpose**: Application pages and routing **Structure**:
+
+```
+pages/
+├── page-name/
+│   ├── index.vue          # Main page component
+│   ├── store.ts           # Page-specific store (optional)
+│   ├── types.ts           # Page-specific types (optional)
+│   ├── ui/                # Page-specific UI components
+│   └── sub-feature/       # Nested page features
+```
+
+**Examples from project**:
+
+- `logistics/vehicles/` - simple page with index.vue
+- `car-pickup/` - complex page with store.ts, types.ts, ui/, railway-tracking/
+- `customs/` - page with store.ts, types.ts, ui/
+
+#### widgets/ - Widgets Layer
+
+**Purpose**: Complex UI blocks with business logic **Structure**:
+
+```
+widgets/
+├── widget-name/
+│   ├── index.ts           # Public API exports
+│   ├── components/        # Widget components
+│   ├── api/               # Widget-specific API calls
+│   ├── stores/            # Widget-specific stores
+│   ├── types/             # Widget-specific types
+│   ├── utils/             # Widget-specific utilities
+│   ├── ui/                # Widget UI components
+│   ├── composables/       # Widget-specific composables
+│   └── inject.ts          # Dependency injection (optional)
+```
+
+**Examples from project**:
+
+- `access-control/` - components/, composables/, types/, inject.ts
+- `chat/` - api/, stores/, types/, ui/, lib/, utils/
+- `logistics/` - components/, api/, stores/, types/, utils/
+
+#### features/ - Features Layer
+
+**Purpose**: Business features and user interactions **Structure**:
+
+```
+features/
+├── feature-name/
+│   ├── index.ts           # Public API exports
+│   ├── form.vue           # Feature forms (optional)
+│   ├── model.ts           # Feature business logic
+│   ├── store.ts           # Feature store (optional)
+│   ├── types.ts           # Feature types (optional)
+│   ├── actions.ts         # Feature actions (optional)
+│   └── ui/                # Feature UI components
+```
+
+**Examples from project**:
+
+- `authentication/` - form.vue, model.ts
+- `preset/` - actions.ts, store.ts, types.ts, ui/
+- `tutorial/` - tutorial.vue, model/, ui/
+
+#### shared/ - Shared Layer
+
+**Purpose**: Reusable code and utilities **Structure**:
+
+```
+shared/
+├── api/                   # API modules organized by domain
+├── entity-tree/           # Specific entity implementations
+├── lib/                   # Utility libraries and hooks
+├── mappers/               # Data transformation utilities
+├── stores/                # Common stores
+├── types/                 # Common types
+└── ui/                    # Reusable UI components
+```
+
+**API organization**:
+
+```
+shared/api/
+├── domain-name/           # API organized by business domain
+│   ├── api-file.ts        # API functions
+│   └── types.ts           # API types
+└── typings.d.ts           # Global API types
+```
+
+**UI organization**:
+
+```
+shared/ui/
+├── component-name/        # Each component in its own folder
+│   ├── index.vue          # Main component
+│   ├── types.ts           # Component types (optional)
+│   └── utils.ts           # Component utilities (optional)
+```
+
+### File Naming Conventions
+
+#### Vue Components
+
+- **Main components**: `index.vue` (for pages, main widgets)
+- **Named components**: `ComponentName.vue` (PascalCase)
+- **Feature components**: `feature-name.vue` (kebab-case)
+
+#### TypeScript Files
+
+- **Stores**: `store.ts` or `StoreName.ts`
+- **Types**: `types.ts` or `TypeName.ts`
+- **API**: `apiName.ts` or `domainName.ts`
+- **Utils**: `utilName.ts` or `utils.ts`
+- **Composables**: `useFeatureName.ts`
+- **Actions**: `actions.ts`
+
+#### Directories
+
+- **All directories**: kebab-case (e.g., `user-profile/`, `access-control/`)
+
+### Import Patterns
+
+#### Page Imports
+
+```typescript
+// pages/page-name/index.vue
+import { Component } from '@/widgets/widget-name'
+import { useFeature } from '@/features/feature-name'
+import { apiFunction } from '@/shared/api/domain-name'
+import { utility } from '@/shared/lib/utils'
+```
+
+#### Widget Imports
+
+```typescript
+// widgets/widget-name/index.ts
+import { FeatureComponent } from '@/features/feature-name'
+import { EntityType } from '@/shared/types'
+import { apiClient } from '@/shared/api'
+```
+
+#### Feature Imports
+
+```typescript
+// features/feature-name/index.ts
+import { EntityType } from '@/shared/types'
+import { apiFunction } from '@/shared/api/domain-name'
+```
+
+### Index File Patterns
+
+#### Widget Index
+
+```typescript
+// widgets/widget-name/index.ts
+export { default as MainComponent } from './components/MainComponent.vue'
+export { default as SecondaryComponent } from './components/SecondaryComponent.vue'
+export * from './types'
+export * from './api'
+```
+
+#### Feature Index
+
+```typescript
+// features/feature-name/index.ts
+export { default as FeatureForm } from './form.vue'
+export * from './model'
+export * from './types'
+```
+
+### Store Patterns
+
+#### Page Store
+
+```typescript
+// pages/page-name/store.ts
+import { defineStore } from 'pinia'
+import type { PageState } from './types'
+
+export const usePageStore = defineStore('pageName', {
+  state: (): PageState => ({
+    // state
+  }),
+  actions: {
+    // actions
+  },
+})
+```
+
+#### Widget Store
+
+```typescript
+// widgets/widget-name/stores/widgetStore.ts
+import { defineStore } from 'pinia'
+
+export const useWidgetStore = defineStore('widgetName', {
+  state: () => ({
+    // state
+  }),
+  actions: {
+    // actions
+  },
+})
+```
+
+### API Organization
+
+#### Domain-based API
+
+```typescript
+// shared/api/domain-name/api.ts
+export const getDomainData = async () => {
+  // API implementation
+}
+
+export const createDomainItem = async (data: CreateData) => {
+  // API implementation
+}
+```
+
+### UI Component Structure
+
+#### Shared UI Component
+
+```
+shared/ui/component-name/
+├── index.vue              # Main component
+├── types.ts               # Component types
+└── utils.ts               # Component utilities
+```
+
+#### Widget UI Component
+
+```
+widgets/widget-name/ui/
+├── ComponentName.vue      # Component file
+└── AnotherComponent.vue   # Another component
+```
+
+## Rules for Creating New Files
+
+1. **Pages**: Always create folder with `index.vue`, add `store.ts` and `types.ts` if complex logic needed
+2. **Widgets**: Create folder with `index.ts`, organize by `components/`, `api/`, `stores/`, `types/`, `ui/`
+3. **Features**: Create folder with `index.ts`, add `model.ts` for business logic, `ui/` for components
+4. **Shared API**: Organize by domain in `shared/api/domain-name/`
+5. **Shared UI**: Each component in its own folder with `index.vue`
+6. **Types**: Use `types.ts` for local types, `shared/types/` for global types
+7. **Stores**: Use `store.ts` naming, organize by layer (page/widget/feature stores)

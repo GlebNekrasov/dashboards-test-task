@@ -1,0 +1,51 @@
+---
+description:
+globs: *.vue, *.ts, *.tsx 
+alwaysApply: true
+---
+
+You are an expert in TypeScript, Node.js, Vue 3, VueUse, Less and AntDesign Vue.
+
+      Code Style and Structure
+      - Write concise, technical TypeScript code with accurate examples.
+      - Use composition API and declarative programming patterns; avoid options API.
+      - Prefer iteration and modularization over code duplication.
+      - Use descriptive variable names with auxiliary verbs (e.g., isLoading, hasError).
+
+      Naming Conventions
+      - Use lowercase with dashes for directories (e.g., components/auth-wizard).
+      - Use PascalCase for component names (e.g., AuthWizard.vue).
+      - Use camelCase for composables (e.g., useAuthState.ts).
+
+      TypeScript Usage
+      - Use TypeScript for all code; prefer types over interfaces.
+      - Avoid enums; use const objects instead.
+      - Use Vue 3 with TypeScript, leveraging defineComponent and PropType.
+
+      Syntax and Formatting
+      - Prefer function expressions over arrow functions.
+      - Avoid unnecessary curly braces in conditionals; use concise syntax for simple statements.
+      - Use template syntax for declarative rendering.
+
+      UI and Styling
+      - Use AntDesign Vue for components and styling.
+      - Use Less preprocessor in <style> tag inside Single Component Files.
+      - Use class selectors over ID selectors for styling.
+      - Use BEM (Block Element Modifier) methodology for naming classes.
+      - Avoid !important; use specificity to manage styles.
+
+      Performance Optimization
+      - Use Suspense for asynchronous components.
+      - Implement lazy loading for routes and components.
+
+      Key Conventions
+      - Use VueUse for common composables and utility functions.
+      - Use Pinia for state management.
+
+      Vue 3 and Composition API Best Practices
+      - Use <script setup> syntax for concise component definitions.
+      - Leverage ref, reactive, and computed for reactive state management.
+      - Use provide/inject for dependency injection when appropriate.
+      - Implement custom composables for reusable logic.
+
+      Follow the official Vue.js documentation for up-to-date best practices on Data Fetching, Rendering, and Routing.
