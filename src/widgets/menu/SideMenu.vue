@@ -51,7 +51,7 @@ const menuItems: MenuProps['items'] = [
   {
     key: STOCKS_ROUTE_NAME,
     icon: () => h(InboxOutlined),
-    label: 'Склады',
+    label: 'Остатки',
   },
 ]
 

@@ -5,6 +5,7 @@
       class="date-picker"
       v-model:value="dateDayjs"
       :locale="locale"
+      :disabled="disabled"
       @change="handleChange"
     />
   </div>
@@ -18,6 +19,7 @@ import { ref, watch } from 'vue'
 
 type DatePickerLocalizedProps = {
   title?: string
+  disabled?: boolean
 }
 
 defineProps<DatePickerLocalizedProps>()

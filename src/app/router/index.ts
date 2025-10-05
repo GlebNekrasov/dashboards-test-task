@@ -34,7 +34,7 @@ const router = createRouter({
       path: '/stocks',
       name: STOCKS_ROUTE_NAME,
       component: () => import('@/pages/stocks/StocksPage.vue'),
-      meta: { title: 'Склады' },
+      meta: { title: 'Остатки' },
     },
   ],
 })

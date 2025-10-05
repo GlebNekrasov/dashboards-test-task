@@ -11,7 +11,7 @@
       sticky
       :pagination="{
         pageSize: 50,
-        showTotal: (total) => `Всего: ${total}`,
+        showTotal: (total) => getTotalPagination(total),
         position: ['topRight'],
         showSizeChanger: false,
       }"
@@ -21,26 +21,27 @@
 
 <script setup lang="ts">
 import { Table } from 'ant-design-vue'
-import { useIncomesStore } from './model/incomes'
+import { useIncomesStore } from '../model/incomes'
 import { storeToRefs } from 'pinia'
 import type { TableColumnsType } from 'ant-design-vue'
-import type { IncomeData } from '@/shared/api/incomes'
+import type { IncomesData } from '@/shared/api/incomes'
 
 const incomesStore = useIncomesStore()
-const { filteredIncomesData, isLoading } = storeToRefs(incomesStore)
+const { filteredIncomesData, isLoading, isMaxRecordCountExceeded, foundRecordsCount, incomesData } =
+  storeToRefs(incomesStore)
 
-const columns: TableColumnsType<IncomeData> = [
-  {
-    title: 'NM ID',
-    dataIndex: 'nm_id',
-    key: 'nm_id',
-    width: 100,
-    fixed: 'left',
-  },
+const columns: TableColumnsType<IncomesData> = [
   {
     title: 'ID дохода',
     dataIndex: 'income_id',
     key: 'income_id',
+    width: 100,
+    fixed: 'left',
+  },
+  {
+    title: 'NM ID',
+    dataIndex: 'nm_id',
+    key: 'nm_id',
     width: 100,
     fixed: 'left',
   },
@@ -100,8 +101,19 @@ const columns: TableColumnsType<IncomeData> = [
   },
 ]
 
-function getRowKey(record: IncomeData) {
-  return `${record.nm_id}-${record.income_id}`
+function getRowKey(record: IncomesData) {
+  return `${record.nm_id}-${record.income_id}-${record.supplier_article}-${record.warehouse_name}`
+}
+
+function getTotalPagination(total: number) {
+  if (isMaxRecordCountExceeded.value) {
+    return (
+      `Всего найдено ${foundRecordsCount.value} строк за выбранный период, ` +
+      `загружено ${incomesData.value.length} строк. ` +
+      `В таблице показано ${total} строк с учетом фильтрации.`
+    )
+  }
+  return `Всего строк в таблице: ${total}`
 }
 </script>
 

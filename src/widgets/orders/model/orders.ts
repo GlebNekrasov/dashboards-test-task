@@ -1,11 +1,11 @@
-import type { IncomesData } from '@/shared/api/incomes'
-import { getIncomesApi } from '@/shared/api/incomes'
+import type { OrdersData } from '@/shared/api/orders'
+import { getOrdersApi } from '@/shared/api/orders'
 import { MAX_RECORDS_COUNT } from '@/shared/lib/request'
 import { notification } from 'ant-design-vue'
 import { defineStore } from 'pinia'
 import { computed, ref, watch } from 'vue'
 
-export const useIncomesStore = defineStore('incomes', () => {
+export const useOrdersStore = defineStore('orders', () => {
   const isLoading = ref(false)
   const dateFrom = ref<string>('')
   const dateTo = ref<string>('')
@@ -14,63 +14,57 @@ export const useIncomesStore = defineStore('incomes', () => {
   const isMaxRecordCountExceeded = computed(() => {
     return foundRecordsCount.value >= maxRecordsCount
   })
-  const incomesData = ref<IncomesData[]>([])
-  const filteredIncomesData = computed(() => {
-    return incomesData.value.filter((income) => {
-      if (
-        selectedSupplierArticles.value.length > 0 &&
-        !selectedSupplierArticles.value.includes(income.supplier_article)
-      ) {
+  const ordersData = ref<OrdersData[]>([])
+  const filteredOrdersData = computed(() => {
+    return ordersData.value.filter((order) => {
+      if (selectedOblasts.value.length > 0 && !selectedOblasts.value.includes(order.oblast)) {
         return false
       }
       if (
         selectedWarehouseNames.value.length > 0 &&
-        !selectedWarehouseNames.value.includes(income.warehouse_name)
+        !selectedWarehouseNames.value.includes(order.warehouse_name)
       ) {
         return false
       }
       return true
     })
   })
-  const selectedSupplierArticles = ref<IncomesData['supplier_article'][]>([])
-  const selectedWarehouseNames = ref<IncomesData['warehouse_name'][]>([])
+  const selectedOblasts = ref<OrdersData['oblast'][]>([])
+  const selectedWarehouseNames = ref<OrdersData['warehouse_name'][]>([])
 
   const warehouseNameOptions = computed(() => {
-    // Фильтруем только по supplierArticle, чтобы показать доступные склады
-    const filtered = incomesData.value.filter((income) => {
-      if (
-        selectedSupplierArticles.value.length > 0 &&
-        !selectedSupplierArticles.value.includes(income.supplier_article)
-      ) {
+    // Фильтруем только по oblast, чтобы показать доступные склады
+    const filtered = ordersData.value.filter((order) => {
+      if (selectedOblasts.value.length > 0 && !selectedOblasts.value.includes(order.oblast)) {
         return false
       }
       return true
     })
-    return [...new Set(filtered.map((income) => income.warehouse_name))]
+    return [...new Set(filtered.map((order) => order.warehouse_name))]
   })
-  const supplierArticleOptions = computed(() => {
-    // Фильтруем только по warehouseName, чтобы показать доступные артикулы поставщиков
-    const filtered = incomesData.value.filter((income) => {
+  const oblastOptions = computed(() => {
+    // Фильтруем только по warehouseName, чтобы показать доступные области
+    const filtered = ordersData.value.filter((order) => {
       if (
         selectedWarehouseNames.value.length > 0 &&
-        !selectedWarehouseNames.value.includes(income.warehouse_name)
+        !selectedWarehouseNames.value.includes(order.warehouse_name)
       ) {
         return false
       }
       return true
     })
-    return [...new Set(filtered.map((income) => income.supplier_article))]
+    return [...new Set(filtered.map((order) => order.oblast))]
   })
 
   function clearStore() {
-    incomesData.value = []
-    selectedSupplierArticles.value = []
+    ordersData.value = []
+    selectedOblasts.value = []
     selectedWarehouseNames.value = []
     foundRecordsCount.value = 0
   }
 
-  async function getIncomesByPage(page: number = 1, limit: number = 500) {
-    const response = await getIncomesApi({
+  async function getOrdersByPage(page: number = 1, limit: number = 500) {
+    const response = await getOrdersApi({
       dateFrom: dateFrom.value,
       dateTo: dateTo.value,
       page,
@@ -83,25 +77,25 @@ export const useIncomesStore = defineStore('incomes', () => {
     }
   }
 
-  async function getIncomesData() {
+  async function getOrdersData() {
     let isLastPage = false
     let currentPage = 1
-    incomesData.value = []
+    ordersData.value = []
     foundRecordsCount.value = 0
 
-    while (!isLastPage && incomesData.value.length < maxRecordsCount) {
+    while (!isLastPage && ordersData.value.length < maxRecordsCount) {
       try {
         isLoading.value = true
-        const response = await getIncomesByPage(currentPage)
+        const response = await getOrdersByPage(currentPage)
         foundRecordsCount.value = response.meta.total
-        incomesData.value.push(...response.data)
+        ordersData.value.push(...response.data)
         if (currentPage === response.meta.last_page) {
           isLastPage = true
         }
         currentPage++
       } catch {
         notification.error({
-          message: 'Не получилось загрузить данные о доходах',
+          message: 'Не получилось загрузить данные о заказах',
         })
         clearStore()
       } finally {
@@ -120,7 +114,7 @@ export const useIncomesStore = defineStore('incomes', () => {
     () => [dateFrom.value, dateTo.value],
     () => {
       if (dateFrom.value && dateTo.value) {
-        getIncomesData()
+        getOrdersData()
       } else {
         clearStore()
       }
@@ -130,16 +124,16 @@ export const useIncomesStore = defineStore('incomes', () => {
   return {
     dateFrom,
     dateTo,
-    filteredIncomesData,
+    filteredOrdersData,
     foundRecordsCount,
-    incomesData,
     isLoading,
     isMaxRecordCountExceeded,
     maxRecordsCount,
-    selectedSupplierArticles,
+    oblastOptions,
+    ordersData,
+    selectedOblasts,
     selectedWarehouseNames,
-    supplierArticleOptions,
     warehouseNameOptions,
-    getIncomesData,
+    getOrdersData,
   }
 })

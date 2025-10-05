@@ -3,6 +3,7 @@ import type { AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios'
 
 const baseAPiUrl = 'http://109.73.206.144:6969/api'
 const secretKey = 'E6kUTYrYwZq2tN4QEtyzsbEBk3ie'
+export const MAX_RECORDS_COUNT = 5000
 
 const service = axios.create()
 const useSecretKeyForRequest = (config: InternalAxiosRequestConfig) => {

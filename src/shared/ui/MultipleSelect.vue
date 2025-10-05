@@ -6,6 +6,7 @@
       v-model:value="value"
       :allow-clear="allowClear"
       :max-tag-count="maxTagCount"
+      :max-tag-text-length="maxTagTextLength"
       mode="multiple"
       :options="sortedOptions"
       :placeholder="placeholder"
@@ -31,6 +32,7 @@ type MultipleSelectProps = {
   placeholder?: string
   allowClear?: boolean
   maxTagCount?: number | 'responsive'
+  maxTagTextLength?: number
   disabled?: boolean
   loading?: boolean
   showSearch?: boolean
@@ -45,6 +47,7 @@ const value = defineModel<MultipleSelectValue>('value', { default: [] })
 const props = withDefaults(defineProps<MultipleSelectProps>(), {
   allowClear: true,
   maxTagCount: 1,
+  maxTagTextLength: 15,
   disabled: false,
   loading: false,
   showSearch: true,
